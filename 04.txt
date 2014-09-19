@@ -1,0 +1,57 @@
+//http://www.fssnip.net/an
+
+//(*) Problem 4 : Find the number of elements of a list.
+// 1: /// Example in F#: 
+// 2: /// 
+// 3: /// > myLength [123; 456; 789];;
+// 4: /// val it : int = 3
+// 5: /// > myLength <| List.ofSeq "Hello, world!"
+// 6: /// val it : int = 13 
+
+let rec myLength1 l =
+  match l with 
+  | [] -> 0
+  | _::tail -> 1 + (myLength1 tail)
+
+let rec myLength2 l =
+  List.length l
+
+//saw solution
+
+let rec myLength3 = List.length //ah yes, i suppose passing parameter is redundant thanks to currying
+
+//not as nice as mylength1, but forcing myself to rewrite with a seperate accumulator variable because who knows why
+let myLength4 l =
+  let rec inner accumulator li = 
+     match li with 
+     | [] -> accumulator
+     | _::t -> inner (accumulator+1) t
+  inner 0 l
+
+let myLength4b l =
+  let rec inner accumulator = function    //huh, the list is implied with function...
+     | [] -> accumulator
+     | _::t -> inner (accumulator+1) t
+  inner 0 l
+  
+let rec myLength1b = function  //that can make version#1 resal terse
+  | [] -> 0
+  | _::t -> 1 + (myLength1b t) 
+
+//i feel the convolution of converting items to 1 to sum them is to be admired.  play with pipes while i'm at it
+let myLength5a l =  
+  l |> List.sumBy (fun _ -> 1)
+
+let myLength5b l =  
+   List.sumBy (fun _ -> 1) <| l
+
+let myLength5c l =  
+   List.sumBy (fun _ -> 1)  l
+ 
+
+let myLength = myLength5c
+
+let t1 = myLength [123; 456; 789];;
+// val it : int = 3
+let t2 = myLength <| List.ofSeq "Hello, world!"
+// val it : int = 13 
