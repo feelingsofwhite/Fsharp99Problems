@@ -1,0 +1,42 @@
+//http://www.fssnip.net/an
+
+//(*) Problem 2 : Find the last but one element of a list.
+// 1: /// (Note that the Lisp transcription of this problem is incorrect.) 
+// 2: ///
+// 3: /// Example in F#: 
+// 4: /// myButLast [1; 2; 3; 4];;
+// 5: /// val it : int = 3
+// 6: /// > myButLast ['a'..'z'];;
+// 7: /// val it : char = 'y'
+
+
+
+let myButLast1 list =
+  list |> List.rev |> Seq.skip 1 |> Seq.head
+
+let rec myButLast2 list = 
+  match list with
+  //| [] -> failwith "empty"
+  //| [a] -> failwith "single"
+  | [] | [_] -> failwith "empty|single"
+  | [a;b] -> a
+  | a::b -> myButLast2 b
+  
+
+let myButLast3s list =
+  list |> List.rev |> List.tail |> List.head 
+  
+let myButLast4s list =
+  List.nth (list |> List.rev) 1  
+
+let myButLast5s list =
+  let flip f a b = f b a
+  list |> List.rev |> flip List.nth 1  
+  
+let myButLast = myButLast5s
+  
+
+let e1 = myButLast [1; 2; 3; 4];;
+/// val it : int = 3
+let e2 = myButLast ['a'..'z'];;
+//val it : char = 'y'

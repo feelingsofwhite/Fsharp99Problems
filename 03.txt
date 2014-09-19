@@ -1,0 +1,54 @@
+//http://www.fssnip.net/an
+
+//(*) Problem 3 : Find the K'th element of a list. The first element in the list is number 1.
+// 1: /// Example: 
+// 2: /// * (element-at '(a b c d e) 3)
+// 3: /// c
+// 4: /// 
+// 5: /// Example in F#: 
+// 6: /// > elementAt [1; 2; 3] 2;;
+// 7: /// val it : int = 2
+// 8: /// > elementAt (List.ofSeq "fsharp") 5;;
+
+let elementAt1 list index =
+  List.nth list (index-1)
+
+let elementAt2 list index =
+  if (index < 1) then failwith "index bad"
+  if (List.isEmpty list) then failwith "empty list"
+  let rec inner list index = 
+      match index with
+      | 0 -> failwith "index greater than list length"
+      | 1 -> List.head list
+      | _ -> inner (List.tail list) (index - 1)
+  inner list index
+
+let rec elementAt3 list index =
+  match list with
+  | [] -> failwith "index > list.length"
+  | head::tail -> 
+    match index with
+    | 1 -> head
+    | _ ->  elementAt3 tail (index - 1)
+
+//saw solution
+
+//look what you can do! match multiple things!!!!
+let rec elementAt4 list index =
+  match list,index with
+  | [],_ -> failwith "empty list!"
+  | _,0  -> failwith "wtf no zero index"
+  | head::_,1 -> head
+  | _::tail,i -> elementAt4 tail (i - 1)
+
+let elementAt = elementAt1
+
+//Example: 
+//* (element-at '(a b c d e) 3)
+//c
+
+//Example in F#: 
+let t1 = elementAt [1; 2; 3] 2;;
+//val it : int = 2
+let t2 = elementAt (List.ofSeq "fsharp") 5;;
+// val it : char = 'r'

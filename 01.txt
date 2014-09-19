@@ -1,0 +1,50 @@
+//http://www.fssnip.net/an
+
+//(*) Problem 1 : Find the last element of a list.
+// 1: /// Example in F#: 
+// 2: /// > myLast [1; 2; 3; 4];;
+// 3: /// val it : int = 4
+// 4: /// > myLast ['x';'y';'z'];;
+// 5: /// val it : char = 'z'
+
+let rec myLast1 list =
+  match list with
+  | [] -> failwith "wtf"
+  | first::rest -> 
+     match rest with
+     | [] -> first
+     | _ -> myLast1 rest
+
+
+let myLast2 list  =
+  let rec reverse r =
+    match r with 
+    | [] -> []
+    | first::rest -> (reverse rest) @ [first]
+  let reversed = reverse list
+  List.head reversed
+  
+
+let rec myLast3 list  =
+  match list with 
+  | [] -> failwith "wtf"
+  | [single] -> single
+  | first::rest -> myLast rest
+  
+
+let myLast list  =
+  //List.head (List.rev list)
+  list |> List.rev |> List.head
+  
+
+
+let myLast list  =
+  //list |> List.reduce (fun itemA itemB -> itemB) //always give preference to the subsequent item
+  list |> List.reduce (fun _ x -> x) 
+  
+
+
+myLast [1; 2; 3; 4]
+ /// val it : int = 4
+myLast ['x';'y';'z']
+ /// val it : char = 'z'
