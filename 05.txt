@@ -1,0 +1,89 @@
+//http://www.fssnip.net/an
+
+//(*) Problem 5 : Reverse a list.
+// 1: /// Example in F#: 
+// 2: ///
+// 3: /// > reverse <| List.ofSeq ("A man, a plan, a canal, panama!")
+// 4: /// val it : char list =
+// 5: ///  ['!'; 'a'; 'm'; 'a'; 'n'; 'a'; 'p'; ' '; ','; 'l'; 'a'; 'n'; 'a'; 'c'; ' ';
+// 6: ///   'a'; ' '; ','; 'n'; 'a'; 'l'; 'p'; ' '; 'a'; ' '; ','; 'n'; 'a'; 'm'; ' ';
+// 7: ///   'A']
+// 8: /// > reverse [1,2,3,4];;
+// 9: /// val it : int list = [4; 3; 2; 1]
+
+
+
+let rec reverse1 = function
+  | [] -> []
+  | [a] -> [a]
+  | x::y -> (reverse1 y) @ [x] 
+
+
+let reverse2 = List.rev
+
+let reverse3 l = //i am proud of the convolution
+  l 
+  |> List.mapi (fun index item -> (index,item))   //add index
+  |> List.sortWith (fun a b -> (fst b) - (fst a)) //inverse sort of index
+  |> List.map (fun item -> snd item)              //remove index
+  
+
+//saw solution
+
+//okay, so it uses an accumulator variable instead of the accumulator like reverse1.  this happend in problem04 too. are accumulator variables a thing?
+let reverse4 l =
+  let rec inner acc = function
+    | [] -> acc
+    | h::t -> inner (h::acc) t
+  inner [] l
+
+//list.fold, eh?
+
+let reverse5 l =
+  let initialState = []
+  let folder state item =
+    let accumulator = state
+    let newAccumulator = item::accumulator
+    newAccumulator
+  let finalState = List.fold folder initialState l
+  //let finalState = List.fold (fun state item -> (item::state)) l
+  finalState  
+
+//hehe.. fold.  cool
+
+
+let reverse6 l =
+  let initialState = []
+  let folder item state  =
+    let accumulator = state
+    let newAccumulator = accumulator @ [item] //weird, can't do accumulator::item
+    newAccumulator
+  let finalState = List.foldBack folder l initialState
+  //let finalState = List.fold (fun state item -> (item::state)) l
+  finalState  
+  
+//hmm.. foldback... itterates in the opposite order, and all parameters are swapped around 
+
+//terse
+let reverse7 = List.fold (fun state item -> item::state) []
+
+let reverse = reverse7
+
+
+List.fold (fun state item -> printfn "its %d" item; 0) 0  [1;2;3;4]
+List.foldBack (fun  item state -> printfn "its %d" item; 0)  [1;2;3;4] 0
+
+
+//HAHA! omg, this took me forever to realize, it's not a list of ints its a list of a single tuple (commas not semi-colons)
+//there's a typo in the example
+//let t2 = reverse [1,2,3,4]  
+
+let t3 = reverse [1;2;3;4] //i believe it should be this
+
+// val it : int list = [4; 3; 2; 1]
+
+//let t1 = reverse <| List.ofSeq ("A man, a plan, a canal, panama!")
+// val it : char list =
+//  ['!'; 'a'; 'm'; 'a'; 'n'; 'a'; 'p'; ' '; ','; 'l'; 'a'; 'n'; 'a'; 'c'; ' ';
+//   'a'; ' '; ','; 'n'; 'a'; 'l'; 'p'; ' '; 'a'; ' '; ','; 'n'; 'a'; 'm'; ' ';
+//   'A']
