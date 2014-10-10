@@ -54,8 +54,8 @@ let reverse5 l =
 
 let reverse6 l =
   let initialState = []
-  let folder item state  =
-    let accumulator = state
+  let folder item state  
+=    let accumulator = state
     let newAccumulator = accumulator @ [item] //weird, can't do accumulator::item
     newAccumulator
   let finalState = List.foldBack folder l initialState
@@ -73,6 +73,10 @@ let reverse = reverse7
 List.fold (fun state item -> printfn "its %d" item; 0) 0  [1;2;3;4]
 List.foldBack (fun  item state -> printfn "its %d" item; 0)  [1;2;3;4] 0
 
+let s1 = List.scan (fun state item -> printfn "its item %d state %d" item state; item+1) 0  [1;2;3;4]
+let s2 = List.scan (fun state item -> printfn "its item %d state %d" item state; state+1) 0  [1;2;3;4]
+
+List.fold
 
 //HAHA! omg, this took me forever to realize, it's not a list of ints its a list of a single tuple (commas not semi-colons)
 //there's a typo in the example
