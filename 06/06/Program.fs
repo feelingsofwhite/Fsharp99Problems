@@ -54,20 +54,48 @@ let isPalindrome = isPalindrome2
 //test <@ let t4 = isPalindrome [1;2;2;1]
 //        t4 = true @> // val it : bool = true
 //
+
 true =? true
 
-isPalindrome [1;2;3] =? false
+// false tests cause runtime errors..
+//isPalindrome [1;2;3] =? false
+//
+//(isPalindrome <| List.ofSeq "madamimadam") =? true
+//
+//isPalindrome [1;2;4;8;16;8;4;2;1] =? true
+//
+//isPalindrome [1;2;2;1] =? true
 
-(isPalindrome <| List.ofSeq "madamimadam") =? true
+let xml = " <EmailList> " +
+               "      <Email>test@email.com</Email> " +
+               "      <Email>test2@email.com</Email> " +
+               " </EmailList> ";
 
-isPalindrome [1;2;4;8;16;8;4;2;1] =? true
+//and now for something completely different... xml parsing in F#
+// thanks to http://stackoverflow.com/questions/332871/f-xml-parsing
 
-isPalindrome [1;2;2;1] =? true
+////works in interactive mode
+//let doc = new System.Xml.XmlDocument() in
+//    doc.LoadXml xml;
+//    doc.SelectNodes "/EmailList/Email/text()"
+//        |> Seq.cast<System.Xml.XmlNode>
+//        |> Seq.map (fun node -> node.Value)
+//        |> String.concat System.Environment.NewLine
+
+//works in compile
+let emailz = 
+    let doc = new System.Xml.XmlDocument()
+    doc.LoadXml xml;
+    doc.SelectNodes "/EmailList/Email/text()"
+        |> Seq.cast<System.Xml.XmlNode>
+        |> Seq.map (fun node -> node.Value)
+        |> String.concat System.Environment.NewLine
 
 
 [<EntryPoint>]
 let main argv = 
     //printfn "%A" argv
+    printfn "%s" (emailz)
     if (System.Diagnostics.Debugger.IsAttached) then
       printfn "[press a key]"
       System.Console.ReadKey() |> ignore
