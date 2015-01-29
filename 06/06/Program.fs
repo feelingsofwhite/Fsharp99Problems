@@ -53,6 +53,8 @@ let isPalindrome = isPalindrome2
 //
 //test <@ let t4 = isPalindrome [1;2;2;1]
 //        t4 = true @> // val it : bool = true
+//
+true =? true
 
 isPalindrome [1;2;3] =? false
 
@@ -67,5 +69,6 @@ isPalindrome [1;2;2;1] =? true
 let main argv = 
     //printfn "%A" argv
     if (System.Diagnostics.Debugger.IsAttached) then
+      printfn "[press a key]"
       System.Console.ReadKey() |> ignore
     0 // return an integer exit code
