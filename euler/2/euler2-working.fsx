@@ -8,18 +8,59 @@
 //  By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
 //
 
+//influential: http://stackoverflow.com/questions/2845744/generating-fibonacci-series-in-f
 
-let Fibonacci = 
-    let generator (a:bigint,b:bigint) = 
-        Some(a + b, (b, a+b) )
-    Seq.unfold generator (0I,1I)
+// ABANDON:  wow, so you get 2, 8, 34, 144, -1109825406, -944741150, -1958435240, -188547518, -945834654, -1691007710 which appears to me like it's 
+//   just looping round the bend of the signed int and it appears to keep going foreverish until an arithmatic overflow
+//
+// ALSO: subsequent solution using seq didn't work, had to put the max infinity cap within the recursive function
+//
+//let Fibonacci = 
+//    let generator (a,b) = 
+//        Some(a + b, (b, a+b) )
+//    Seq.unfold generator (0,1)
+//
+////test: Fibonacci |> Seq.take 10 |> Seq.iter (fun l -> printf "%A, " l)
+//
+//let isEven (i) = i % 2 = 0
+//let doesntExceedMax (i) = i < 400
+//
+//Fibonacci
+//    |> Seq.where doesntExceedMax
+//    |> Seq.filter isEven
+//    |> Seq.iter (fun l -> printf "%A, " l)
+//    //|> Seq.sum
+//
 
-//test: Fibonacci |> Seq.take 10 |> Seq.iter (fun l -> printf "%A, " l)
+let max = 4000000
 
-let isEven (i:bigint) = i % 2I = 0I
-let doesntExceedMax (i:bigint) = i < 400I
+let Fibonacci =
+    let rec Fibonacci a b = seq{
+        yield a
+        if (b < max) then
+          yield! Fibonacci b (a+b)
+    }
+    Fibonacci 0 1
 
-Fibonacci
-    |> Seq.filter isEven
-    |> Seq.where doesntExceedMax
+let isEven i = i % 2 = 0
+let doesntExceedMax i = i < max
+
+let numbers = 
+    Fibonacci
+        //|> Seq.where doesntExceedMax //unneeded becuase the guard is within the Fibonacci funciton.  If you remove that if statement, and uncomment this line, you get an overflow exception
+        |> Seq.filter isEven
+let answer = 
+    numbers
+    //|> Seq.iter (fun l -> printf "%A, " l)
     |> Seq.sum
+
+printfn "%A" answer
+
+//as written up on projecteuler.net
+// So the biggest problem I had was that F# compiler seemed to suck. Things I felt should've worked led to arithmetic overflows which appeared to 
+// be a result of signed ints overflowing into negatives.  And it flew directly in the face of upvoted answers on fibonacci stackoverflow article.  
+//
+// So the problem is that if you remove the 'if (b<max)' statement inside the seq definition, and uncomment the 'Seq.where doesntExceedmax', you would 
+// expect that it does the same thing, yes? but it doesn't.  Overflow error.  And if you where to then replace the Seq.sum with 'Seq.iter (fun l -> printf "%A, " l)', 
+// and change to 'max=400', you'll get an output that looks like 2, 8, 34, 144, -1109825406, -944741150, -1958435240, -188547518, -945834654, -1691007710, ...  Or
+// at least thats what happened to me; so that sucked. 
