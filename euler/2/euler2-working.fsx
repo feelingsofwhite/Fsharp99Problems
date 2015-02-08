@@ -54,7 +54,7 @@ let answer =
     //|> Seq.iter (fun l -> printf "%A, " l)
     |> Seq.sum
 
-printfn "%A" answer
+printfn "answer = %A" answer
 
 //as written up on projecteuler.net
 // So the biggest problem I had was that F# compiler seemed to suck. Things I felt should've worked led to arithmetic overflows which appeared to 
@@ -64,3 +64,11 @@ printfn "%A" answer
 // expect that it does the same thing, yes? but it doesn't.  Overflow error.  And if you where to then replace the Seq.sum with 'Seq.iter (fun l -> printf "%A, " l)', 
 // and change to 'max=400', you'll get an output that looks like 2, 8, 34, 144, -1109825406, -944741150, -1958435240, -188547518, -945834654, -1691007710, ...  Or
 // at least thats what happened to me; so that sucked. 
+
+
+
+let rec fib n = if n < 2 then 1 else fib (n-2) + fib(n-1)  //from http://www.hanselman.com/blog/TheWeeklySourceCode13FibonacciEdition.aspx
+
+let n = 40 
+fib n |> printfn "fibonancci at %A is %A" n
+
