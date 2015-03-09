@@ -18,7 +18,22 @@ let revIsOrigBad (xs:list<int>) = List.rev xs = xs
 Check.Quick revIsOrigBad
 
 
+open global.Xunit
 
+[<Fact>]
+let ``Reverse of reverse of a list is the original list``() =
+  let revRevIsOrig (xs:list<int>) = List.rev(List.rev xs) = xs
+  Check.QuickThrowOnFailure revIsOrigBad
+
+open FsCheck.Xunit
+
+[<Property>]
+let ``Reverse of reverse of a list is the original list ``(xs:list<int>) =
+  List.rev(List.rev xs) = xs
+
+[<Property>]
+let ``Reverse of reverse of a list is the original list bad``(xs:list<int>) =
+  List.rev xs = xs
 
 //boilerplate
 
