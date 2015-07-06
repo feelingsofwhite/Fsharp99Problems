@@ -56,7 +56,10 @@ let isPalindromeLiam list =
   isPalindrome list
   
 
-let isPalindrome = isPalindromeLiam
+let isPalindromeFromAnswerKey list = 
+  list = List.rev list
+
+let isPalindrome = isPalindromeFromAnswerKey
 
 
 // let t1 = isPalindrome [1;2;3];;
